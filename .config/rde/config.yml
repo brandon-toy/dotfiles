@@ -1,0 +1,12 @@
+version: "1.0"
+properties:
+  serverversion:
+    lastchecktimestamp: -62135596800
+    version: 0.0.0.0
+  images:
+    awsregion: us-west-2
+  cli:
+    completionscriptpaths:
+      zsh: ~/.zsh/completion/_rde
+  midway:
+    cookiehash: a382ce9954dd4cb6f18496c41ad5205132f0943c

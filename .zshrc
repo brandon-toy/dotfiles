@@ -1,7 +1,17 @@
 export KLONDIKE_SERVICE_ACCOUNT_ID=325510383498
 export ZSH_THEME=""
 source /apollo/env/envImprovement/var/zshrc
+bindkey -s ^f "tmux-sessionizer\n"
 
+export AWS_PAGER=""
+FCEDIT=nvim
+ZVM_VI_EDITOR=nvim
+EDITOR=nvim
+alias vim=nvim
+zle -N edit-command-line
+bindkey -M vicmd 'vv' edit-command-line
+
+alias ts="tmux source ~/dotfiles/.config/tmux/tmux.conf"
 
 export AWS_PAGER=""
 alias rox="cd /local/home/bghtoy/workplace/RDE-RDSRox/src/RDE-RDSRox"

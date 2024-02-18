@@ -1,8 +1,7 @@
 export KLONDIKE_SERVICE_ACCOUNT_ID=325510383498
 export ZSH_THEME=""
-source /apollo/env/envImprovement/var/zshrc
-bindkey -s ^f "tmux-sessionizer\n"
-
+alias tmux="tmux -2"
+export TERM=screen
 export AWS_PAGER=""
 FCEDIT=nvim
 ZVM_VI_EDITOR=nvim
@@ -123,49 +122,6 @@ startWS="cd $WS_WS_ROOT && brazil-build server ; zsh -i"
 # export EP_PATH="/home/appiccio/workplace/ControlPlaneRelease/EventProcessor/src/RDSEventProcessor"
 # export WS_PATH="/home/appiccio/workplace/WSTestSpace/src/RDSCoralService"
 #
-function bbut() {
-  if [ -z "$1" ]; then
-    brazil-build unit-tests
-  else
-    files=$(find . -name "$1.java")
-    class=$(sed -n "s/^package \(.*\);/\1.$1/p" "$files" 2>/dev/null)
-    if [ -z "$class" ]; then
-      echo "Test class $1.java not found - make sure it's below your current location in the directory structure."
-    elif [ -z "$2" ]; then
-        echo "$class"
-      brazil-build single-unit-test -DtestClass="$class"
-    else
-      brazil-build single-unit-test -DtestClass="$class" -DtestMethods="$2"
-    fi
-  fi
-}
-
-# Initialize all four components of the control plane, using the workspaces as found.
-function cpinit () {
-        tmux new -d -s ControlPlane "cd $AWF_PATH && brazil-build server" ';' \
-        split "cd $OPS_PATH && DB_ENGINE=postgres RAILS_ENV=onebox brazil-build server" ';' \
-        split "cd $EP_PATH && brazil-build server" ';' \
-        split "cd $WEBSERVER_PATH && brazil-build server" ';' \
-        select-layout tiled ';' \
-        set remain-on-exit on
-}
-
-function cinit () {
-        tmux new -d -s Console "cd $console && brazil-build gwt-code-server" ';' \
-        split "cd $console brazil-build init-local-connected-webapp; brazil-build local-connected-webapp-server" ';' \
-        select-layout tiled ';' \
-        set remain-on-exit on
-}
-
-function syncmain () {
-	brazil-recursive-cmd --allPackages git checkout mainline
-	brazil ws sync
-	brazil-recursive-cmd --allPackages 'brazil ws use -p ${name} --latestVersion'
-}
-
-function checkreb () {
-	(git checkout $1 || git checkout -b $1) && git rebase $2
-}
 
 ada_creds() {
     local ada_output=""
@@ -344,7 +300,7 @@ export PATH=~/.toolbox/bin:$PATH
 # alias fzfcd="cd $(find * -type d | fzf)"
 alias gs="git status"
 alias shedit='nvim ~/.zshrc' # Opens your shell profile.
-alias shource='source ~/.zshrc' # Loads changes from your shell profile to your current shell.
+alias s='source ~/.zshrc' # Loads changes from your shell profile to your current shell.
 alias sshcld='ssh {{user\}}.aka.corp.amazon.com' # Put your Cloud Desktop alias here to connect.
 alias -g RDS_ONEBOX='--endpoint-url http://localhost:8000 --region us-east-1 --profile default rds'
 
@@ -463,7 +419,7 @@ ZSH_THEME="robbyrussell"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git zsh-autosuggestions zsh-z dirhistory web-search jsontools zsh-vi-mode)
+plugins=(git zsh-autosuggestions zsh-z dirhistory web-search jsontools)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -521,3 +477,16 @@ autoload -Uz compinit && compinit -i
 export NVM_DIR="$HOME/.config/nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+
+export JAVA_HOME=$(dirname $(dirname $(realpath /usr/bin/java)))
+export PATH=$JAVA_HOME/bin:$PATH
+
+source ~/scripts/keybind.sh
+
+export ZSH_THEME=""
+export AWS_PAGER=""
+FCEDIT=nvim
+ZVM_VI_EDITOR=nvim
+EDITOR=nvim
+
